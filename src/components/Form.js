@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 import { FaAngleDown } from "react-icons/fa6";
 import { FaAngleUp } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
+import { makeBooking } from "../redux/booking/actions";
+import Alert from "./Alert";
 
 export default function Form() {
   const [visible, setVisible] = useState(false);
+  const [alert, setAlert] = useState(false);
+
   const [bookingData, setBookingData] = useState({});
+
+  const data = useSelector((state) => state.data);
+
+  const size = data.length;
+
+  const dispatch = useDispatch();
 
   const toggleVisible = () => {
     setVisible(!visible);
@@ -20,7 +31,17 @@ export default function Form() {
     e.preventDefault();
     console.log("Clicked");
     console.log(bookingData);
+
+    dispatch(makeBooking({ ...bookingData, id: size + 1 }));
+    setAlert(true)
+    setTimeout(() => {
+      setAlert(false);
+    }, 5000);
   };
+
+  const handleRemove = () =>{
+    setAlert(false)
+  }
 
   return (
     <div className="w-[100%] grid place-items-center">
@@ -116,6 +137,7 @@ export default function Form() {
           <div className="w-full">
             <button
               type="submit"
+              onClick={toggleVisible}
               className="bg-indigo-900 px-4 py-1 rounded-3xl text-white font-semibold border-2 border-indigo-300 w-full md:mt-0 mt-5"
             >
               Book Flight
@@ -123,6 +145,8 @@ export default function Form() {
           </div>
         </form>
       </div>
+
+      {alert && <Alert peep="Added To BookingList" handleRemove={handleRemove} />}
     </div>
   );
 }

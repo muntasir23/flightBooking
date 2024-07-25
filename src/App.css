@@ -8,6 +8,9 @@
   display: none;
 }
 
+button:active{
+  transform: scale(0.96);
+}
 
 tr:nth-child(even){
   background: #f1f5f9;
